@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Blog</title>
+</head>
+
+<body>
+	<h1> My Sample Blog </h1>
+	<div class="container">
+		{% for blog in blogs %}
+			<hr>
+			<h2> {{blog.subject}} </h2>
+			<h3> {{blog.content}} </h3>
+			<hr>
+		{% endfor %}
+	</div>
+</body>
+
+</html>
