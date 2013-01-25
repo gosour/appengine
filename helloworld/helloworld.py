@@ -1,68 +1,15 @@
 import os
-import re
 
 import webapp2
 import jinja2
 
-from google.appengine.ext import db
+
+from webappfunc import *
+from webappdatabase import *
 
 template_dir = os.path.join(os.path.dirname(__file__),'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
                                 autoescape = True)
-
-def valid_day(day):
-    try:
-        int(day)
-    except ValueError:
-        return None
-    else:
-        if int(day) <= 31 and int(day) >=1:
-            return int(day)
-        else:
-            return None
-
-def valid_year(year):
-    if year.isdigit() and int(year) in range(1900, 2021):
-        return int(year)
-    else: return None
-
-def valid_month(month):
-    months = ['January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'November',
-          'December']
-    if month.lower() in [m.lower() for m in months]:
-        return months[ [m.lower() for m in months].index(month.lower()) ]
-    else:
-        return None
-
-def rot13fy(text):
-	lowers = [i+13 for i in range(ord('a'), ord('z') +1) if (i+13)<=ord('z')]
-	lowers = lowers + [(i+13)%ord('z')+ord('a') -1 for i in range(ord('a'), ord('z') +1) if (i+13)>ord('z')]
-	uppers = [i+13 for i in range(ord('A'), ord('Z') +1) if (i+13)<=ord('Z')]
-	uppers = uppers + [(i+13)%ord('Z')+ord('A') -1 for i in range(ord('A'), ord('Z') +1) if (i+13)>ord('z')]
-
-	lowerdict = dict(map(lambda (x,y): (chr(x),chr(y)), zip([org for org in range(ord('a'),ord('z')+1)],lowers)))
-	upperdict = dict(map(lambda (x,y): (chr(x),chr(y)), zip([org for org in range(ord('A'),ord('Z')+1)],uppers)))
-
-	totaldict = dict(lowerdict.items()+upperdict.items())
-	
-	newtext = ''
-	for char in text:
-		if char in totaldict:
-			newtext = newtext + totaldict[char]
-		else:
-			newtext = newtext + char
-	
-	return newtext
 
 
 class BaseHandler(webapp2.RequestHandler):
@@ -114,11 +61,7 @@ class RotHandler(BaseHandler):
 		outputxt = rot13fy(txt)
 		self.render('rot13.html',text=outputxt)
 
-class Art(db.Model):
-    #property_name = db.TypeProperty
-    title = db.StringProperty(required = True)
-    art = db.TextProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add = True)
+
 
 class AsciiChan(BaseHandler):
     def ascii_front(self,title="",art = "", error = ""):
@@ -140,10 +83,6 @@ class AsciiChan(BaseHandler):
                                      title = title,
                                      art = art)
 
-class Blog(db.Model):
-    subject = db.StringProperty(required=True)
-    content = db.TextProperty(required=True)
-    created = db.DateProperty(auto_now_add = True)
 
 class BlogMainHandler(BaseHandler):
     def get(self):
@@ -170,7 +109,90 @@ class BlogPostHandler(BaseHandler):
 class Permlink(BaseHandler):
     def get(self,blog_id): #if parentheses in url matcher 
         s = Blog.get_by_id(int(blog_id))
+        if not s:
+            self.error(404)
+            return
+
         self.render('blogpost.html',blog = s)
+
+class Signup(BaseHandler):
+    def get(self):
+        self.render('signupform.html')
+    def post(self):
+        have_error = False
+        error = ""
+        username = self.request.get('username')
+        password = self.request.get('password')
+        verify = self.request.get('verify')
+        email = self.request.get('email')
+
+        params = dict(  username = username,
+                        email = email,
+                        error= error)
+
+        if not valid_username(username):
+            params['error_username'] = "That's not a valid username."
+            have_error = True
+
+        if not valid_password(password):
+            params['error_password'] = "That wasn't a valid password."
+            have_error = True
+        elif password != verify:
+            params['error_verify'] = "Your passwords didn't match."
+            have_error = True
+
+        if not valid_email(email):
+            params['error_email'] = "That's not a valid email."
+            have_error = True
+
+        user = db.GqlQuery('SELECT * FROM User WHERE username = \'%s\'' %(username))
+        result = user.get()
+        if result:
+            params['error'] = "Username exists!"
+            have_error = True
+
+        if have_error:
+            self.render('signupform.html',**params)
+        else:
+            u = User(username=username,password=password)
+            u_key = u.put()
+            #setcookie
+            cookieval = 'username=%s' %(set_cookie(username))
+            self.response.headers.add_header('Set-cookie',cookieval.encode('ascii'))
+            self.redirect('/signup/welcome')
+
+class Welcome(BaseHandler):
+    def get(self):
+        cookiestr = self.request.cookies.get('username')
+        username = valid_cookie(cookiestr)
+        if valid_username(username):
+            self.render('welcome.html', username = username)
+        else:
+            self.redirect('/signup')
+
+class Login(BaseHandler):
+    def get(self):
+        self.render('login.html')
+
+    def post(self):
+        have_error = False
+        username = self.request.get('username')
+        password = self.request.get('password')
+
+        user = db.GqlQuery('SELECT * FROM User WHERE username = \'%s\' AND password = \'%s\'' %(username,password))
+        result = user.get()
+        if not result:
+            self.render('login.html',error = 'Invalid login', username = username)
+        else:
+            cookieval = 'username=%s' %(set_cookie(username))
+            self.response.headers.add_header('Set-cookie',cookieval.encode('ascii'))
+            self.redirect('/signup/welcome')    
+
+class Logout(BaseHandler):
+    def get(self):
+        self.response.headers.add_header('Set-Cookie', 'username=; Path=/')
+        self.redirect('/signup')        
+
 
 app = webapp2.WSGIApplication([ ('/',MainPage), 
 								('/forms',FormPage),
@@ -179,7 +201,11 @@ app = webapp2.WSGIApplication([ ('/',MainPage),
                                 ('/asciichan',AsciiChan),
                                 ('/blog',BlogMainHandler),
                                 ('/blog/newpost',BlogPostHandler),
-                                ('/blog/(\d+)', Permlink)
+                                ('/blog/(\d+)', Permlink),
+                                ('/signup',Signup),
+                                ('/signup/welcome',Welcome),
+                                ('/login',Login),
+                                ('/logout',Logout),
                                 ],
 								debug=True)
 

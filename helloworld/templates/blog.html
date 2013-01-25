@@ -11,7 +11,7 @@
 		{% for blog in blogs %}
 			<hr>
 			<h2> {{blog.subject}} </h2>
-			<h3> {{blog.content}} </h3>
+			<h3> {{blog.content | safe}} </h3>
 			<hr>
 		{% endfor %}
 	</div>
