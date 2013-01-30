@@ -1,22 +1,97 @@
 <!DOCTYPE HTML>
 
-<html>
+<html lang="en">
 <head>
-	<title> GosourWebapps</title>
+	<meta charset="utf-8">
+	<title>SouravGoswami</title>
+	<meta name="viewport" content = "width=device-width, intial-scale=1.0">
+	<meta name="author" content="Sourav Goswami"/>
+	<meta name="description" content="My personal homepage"/>
+	
+	<link href="stylesheets/bootstrap.css" rel="stylesheet">
+	<link href="stylesheets/bootstrap-responsive.css" rel="stylesheet">
+	<link  href="stylesheets/homepage.css" rel="stylesheet">
+	
 </head>
 
 <body>
-	<h1> My stab at webapps</h1>
-	<h2> Sourav Goswami </h2>
-	<p class="links">
-		<a href=/> Home </a><br>
-		<a href=/forms>Forms and their validation</a><br>
-		<a href=/rot13>ROT13 cipher</a><br>
-		<a href=/asciichan>/asciichan/</a><br>
-		<a href=/blog>Blog</a><br>	
-	</p class="user">
-		<h2> Welcome {{username}} </h2>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand">Sourav Goswami</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+              
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+    	<div class="hero-unit">
+	    	<br><br>
+	        <h1>Hello! <br> Thanks for dropping by</h1>
+	        <h2> This site is under construction.
+					 So stuff maybe broken, and things will look ugly. The code is available at my <a href="http://www.github.com/gosour" >github</a> and I will gladly accept pull requests!
+	        <p></p>
+        </div>
+
+        <div class="hero-unit" style="font-size:18px;">
+        	Here are some of my stabs at webapps. These suck but so do I, but some more stuff coming soon!
+        </div>
+
+     	<div class="row">
+        <div class="span4">
+          <h2>Forms</h2>
+          <p>A basic form validation on the server side. You have to be quite apt in entering dates. So enter at your own risk </p>
+          <p><a class="btn" href="/forms">Can you enter dates? &raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>Rot13</h2>
+          <p>This ultra high end cipher method, is going to change the world. This cipher is sooper secret. But since you are someone awesome
+          I will tell you. The ciphering is done.. wait for it.. by shifting each alphapbet 13 places ahead. Isn't it revolutionary? Try out this state of the art algorithm exclusively here.  </p>
+          	<p><a class="btn" href="/rot13"> Secretify &raquo;</a></p>
+       </div>
+        <div class="span4">
+          <h2>Ascii</h2>
+          <p>Post your ascii art here. Will be implementing a gmap api soon. You can get them <a href="http://www.chris.com/ascii"> here </a>
+          	if you are lazy and just want to test
+     	</p>
+          <p><a class="btn" href="/asciichan">I can draw! &raquo;</a></p>
+        </div>
+      </div>
+
+     	<div class="row">
+        <div class="span4">
+          <h2>Sample Blog</h2>
+          <p>A simple blog! Incomplete. But you can make public posts here </p>
+          <p><a class="btn" href="/blog">Blogging &raquo;</a></p>
+        </div>
+       
+        
+        </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Sourav Goswami gosour@gmail.com</p>
+      </footer>
+
+    </p class="user">
+			<h2> Welcome {{username}} </h2>
 	<p>
+	</div>
 </body>
+
 
 </html>

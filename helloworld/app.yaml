@@ -7,7 +7,13 @@ threadsafe: true
 libraries:
 - name: jinja2
   version: latest
+
 handlers:
+- url: /stylesheets
+  static_dir: stylesheets
+- url: /js
+  static_dir: js
+
 - url: /.*
   script: helloworld.app
 

@@ -1,73 +1,70 @@
 <!DOCTYPE html>
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>Signup! To my awesomeness</title>
+        <!-- Le styles -->
+    <link href="stylesheets/bootstrap.css" rel="stylesheet">
     <style type="text/css">
-      .label {text-align: right}
-      .error {color: red}
-    </style>
+      body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+      }
 
-  </head>
+      .form-signin {
+        max-width: 300px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+           -moz-border-radius: 5px;
+                border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      }
+      .form-signin .form-signin-heading,
+      .form-signin .checkbox {
+        margin-bottom: 10px;
+      }
+      .form-signin input[type="text"],
+      .form-signin input[type="password"] {
+        font-size: 16px;
+        height: auto;
+        margin-bottom: 15px;
+        padding: 7px 9px;
+      }
+
+    </style>
+    <link href="stylesheets/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    </head>
 
   <body>
-    <h2>Don't go away please!</h2>
-    <form method="post">
-      <table>
-        <tr>
-          <td class="label">
-            Username
-          </td>
-          <td>
-            <input type="text" name="username" value="{{username}}">
-          </td>
-          <td class="error">
-            {{error_username}}
-          </td>
-        </tr>
 
-        <tr>
-          <td class="label">
-            Password
-          </td>
-          <td>
-            <input type="password" name="password" value="">
-          </td>
-          <td class="error">
-            {{error_password}}
-          </td>
-        </tr>
+    <div class="container">
 
-        <tr>
-          <td class="label">
-            Verify Password
-          </td>
-          <td>
-            <input type="password" name="verify" value="">
-          </td>
-          <td class="error">
-            {{error_verify}}
-          </td>
-        </tr>
-
-        <tr>
-          <td class="label">
-            Email (optional)
-          </td>
-          <td>
-            <input type="text" name="email" value="{{email}}">
-          </td>
-          <td class="error">
-            {{error_email}}
-          </td>
-        </tr>
-      </table>
-
-      <input type="submit">
-    </form>
+      <form class="form-signin" method="post">
+        <h2 class="form-signin-heading">Sign Up</h2>
+        <input type="text" class="input-block-level" placeholder="Username" value="{{username}}">{{error_username}}
+        <input type="password" class="input-block-level" placeholder="Password"> {{error_password}}
+         <input type="password" class="input-block-level" placeholder="Verify password"> {{error_verify}}
+        <input type="text" class="input-block-level" placeholder="Email" value="{{email}}"> {{error_email}}
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> Remember me
+        </label   >
+        <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+      </form>
 
     <div class="error">{{error}}</div>
+    </div> <!-- /container -->
+
+   
   </body>
-
-
 </html>

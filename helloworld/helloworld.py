@@ -41,7 +41,7 @@ class FormPage(BaseHandler):
         year = valid_year(user_year)
         day = valid_day(user_day)
         if not(month and year and day):
-            self.write_form(error="THIS IS NOT WHAT I WANT! GODDAMIT!",
+            self.write_form(error="You cannot even enter dates properly. Shame one you..",
                             day=user_day,
                             month=user_month,
                             year=user_year)
@@ -191,7 +191,8 @@ class Login(BaseHandler):
 class Logout(BaseHandler):
     def get(self):
         self.response.headers.add_header('Set-Cookie', 'username=; Path=/')
-        self.redirect('/signup')        
+        self.redirect('/signup')  
+
 
 
 app = webapp2.WSGIApplication([ ('/',MainPage), 
@@ -206,6 +207,6 @@ app = webapp2.WSGIApplication([ ('/',MainPage),
                                 ('/signup/welcome',Welcome),
                                 ('/login',Login),
                                 ('/logout',Logout),
-                                ],
+                               ],
 								debug=True)
 
