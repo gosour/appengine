@@ -2,7 +2,7 @@ import os
 
 import webapp2
 import jinja2
-
+import json
 
 from webappfunc import *
 from webappdatabase import *
@@ -168,7 +168,7 @@ class Welcome(BaseHandler):
         if valid_username(username):
             self.render('welcome.html', username = username)
         else:
-            self.redirect('/signup')
+            self.redirect('/blog/signup')
 
 class Login(BaseHandler):
     def get(self):
@@ -191,9 +191,29 @@ class Login(BaseHandler):
 class Logout(BaseHandler):
     def get(self):
         self.response.headers.add_header('Set-Cookie', 'username=; Path=/')
-        self.redirect('/signup')  
+        self.redirect('/blog/signup')  
 
+class BlogJson(BaseHandler):
+    def get(self):
+        blogs = db.GqlQuery('SELECT * FROM Blog ORDER BY created DESC')
+        self.response.headers['content-type'] = 'application/json;utf-8'
+        jtotal = []
+        for blog in blogs:
+            jindvidual = {}
+            jindvidual['content'] = blog.content
+            jindvidual['subject'] = blog.subject
+            jtotal.append(jindvidual)
+        self.write(json.dumps(jtotal))
 
+class PermJson(BaseHandler):
+    def get(self,blog_id):
+        s = Blog.get_by_id(int(blog_id))
+        if not s:
+            self.error(404)
+            return
+        self.response.headers['content-type'] = 'application/json;utf-8'
+        jtotal = [{'content':s.content,'subject':s.subject}]
+        self.write(json.dumps(jtotal))
 
 app = webapp2.WSGIApplication([ ('/',MainPage), 
 								('/forms',FormPage),
@@ -203,10 +223,12 @@ app = webapp2.WSGIApplication([ ('/',MainPage),
                                 ('/blog',BlogMainHandler),
                                 ('/blog/newpost',BlogPostHandler),
                                 ('/blog/(\d+)', Permlink),
-                                ('/signup',Signup),
+                                ('/blog/signup',Signup),
                                 ('/signup/welcome',Welcome),
-                                ('/login',Login),
-                                ('/logout',Logout),
+                                ('/blog/login',Login),
+                                ('/blog/logout',Logout),
+                                ('/blog.json',BlogJson),
+                                ('/blog/(\d)+.json',PermJson)
                                ],
 								debug=True)
 
