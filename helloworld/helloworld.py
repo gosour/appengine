@@ -215,6 +215,18 @@ class PermJson(BaseHandler):
         jtotal = [{'content':s.content,'subject':s.subject}]
         self.write(json.dumps(jtotal))
 
+class Sree(BaseHandler):
+    def get(self):
+        self.render('sree-form.html')
+    def post(self):
+        username = self.request.get('username')
+        if username == "tanu" or username =="Tanu" or username == "Sree" or username == "sree":
+            self.render('sree.html')
+        else:
+            self.render('sree-form.html',error="No cake for you, you stinking,rotting fart..",username=username)
+
+
+
 app = webapp2.WSGIApplication([ ('/',MainPage), 
 								('/forms',FormPage),
 								('/thanks',ThanksHandler),
@@ -228,7 +240,8 @@ app = webapp2.WSGIApplication([ ('/',MainPage),
                                 ('/blog/login',Login),
                                 ('/blog/logout',Logout),
                                 ('/blog.json',BlogJson),
-                                ('/blog/(\d)+.json',PermJson)
+                                ('/blog/(\d)+.json',PermJson),
+                                ('/sree',Sree)
                                ],
 								debug=True)
 
